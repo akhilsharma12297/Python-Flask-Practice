@@ -1,45 +1,41 @@
-from flask import Flask, request, url_for
+
+from flask import Flask, escape, url_for, request, render_template
 
 app = Flask(__name__)
 
 
 @app.route('/')
-def main_page():
-    return "This is main Page."
+def hello():
+    return render_template('login.html')
 
 
-@app.route('/hello')
-def hello_world():
-    return "Hello world! This is a Flask App"
+@app.route('/admin')
+def admin():
+    return 'This is admin page'
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login')
 def login():
-    if request.method == 'POST':
-        return do_the_login()
-    else:
-        return show_the_login_form()
+    return render_template('login.html')
+
+##############################################
 
 
-@app.route('/do_the_login')
-def do_the_login():
-    return "do_the_login"
+@app.route('/<temp>')
+def name_page(temp):
+    return 'Hello {}!'.format(temp)
 
 
-@app.route('/show_the_login_form')
-def show_the_login_form():
-    return "show_the_login_form"
-
-
-@app.route('/user/<username>')
-def profile(username):
-    ans = username + "'s profile"
-    return ans
+@app.route('/get_post_test', methods=['GET', 'POST', 'PUT'])
+def get_post_test():
+    if request.method == 'GET':
+        return 'this_is_get'
+    elif request.method == 'POST':
+        return 'this_is_post'
+    elif request.method == 'PUT':
+        return 'this_is_post'
 
 
 with app.test_request_context():
-    print(url_for('main_page'))
-    print(url_for('hello_world'))
-    print(url_for('login'))
-    print(url_for('login', next='/'))
-    print(url_for('profile', username='Akhil Sharma'))
+    print(url_for('hello'))
+    print(url_for('admin'))
